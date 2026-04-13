@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creative Automation — Henriette.AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --brun:#2a1f14;
+  --terra:#9c6e4a;
+  --stone:#c4a882;
+  --cream:#f5efe4;
+  --chaux:#efe9dd;
+  --white:#faf8f4;
+}
+html{scroll-behavior:smooth}
+body{background:var(--white);color:var(--brun);font-family:'Jost',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
+
+.cursor{width:7px;height:7px;background:var(--terra);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+.cursor-ring{width:30px;height:30px;border:1px solid rgba(156,110,74,0.4);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s,height .3s,opacity .3s}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.6rem 3rem;display:flex;justify-content:space-between;align-items:center;transition:background .5s}
+nav.scrolled{background:rgba(239,233,221,0.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(196,168,130,0.18)}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1rem;letter-spacing:.42em;color:var(--white);text-transform:uppercase;font-weight:300;transition:color .5s;text-decoration:none;display:flex;align-items:center;gap:.7rem}
+nav.scrolled .nav-logo{color:var(--brun)}
+.logo-mark{width:26px;height:26px;border:1px solid currentColor;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;opacity:.75}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(245,239,228,.6);text-decoration:none;transition:color .3s}
+nav.scrolled .nav-links a{color:rgba(42,31,20,.45)}
+.nav-links a:hover,.nav-links a.active{color:var(--terra)!important}
+
+/* HERO */
+.hero{position:relative;width:100%;min-height:100vh;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;overflow:hidden;padding:0 0 6rem 5rem}
+.hero-video{position:absolute;inset:0;z-index:0}
+.hero-video video{width:100%;height:100%;object-fit:cover}
+.hero-video::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(42,31,20,.3) 0%,rgba(42,31,20,.1) 40%,rgba(42,31,20,.75) 100%)}
+.grain{position:absolute;inset:0;pointer-events:none;z-index:2;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");background-size:180px;mix-blend-mode:overlay}
+.hero-content{position:relative;z-index:3;max-width:800px}
+.hero-eyebrow{font-size:.62rem;letter-spacing:.5em;text-transform:uppercase;color:rgba(196,168,130,.6);margin-bottom:1.5rem;font-family:'Jost',sans-serif;font-weight:200;opacity:0;animation:fadeUp .8s ease .2s forwards}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3.5rem,8vw,7rem);line-height:.95;letter-spacing:-.02em;color:var(--white);margin-bottom:2rem;opacity:0;animation:fadeUp .9s ease .4s forwards}
+.hero-title em{font-style:italic;background:linear-gradient(135deg,#e8d5b0 0%,#c4a882 20%,#d4956a 40%,#9fc4c8 65%,#6ba8b0 85%,#e8d0a0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-desc{font-family:'Cormorant Garamond',serif;font-size:clamp(1rem,1.8vw,1.3rem);font-style:italic;color:rgba(245,239,228,.78);line-height:1.7;max-width:560px;opacity:0;animation:fadeUp .9s ease .6s forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* AXES — 2 colonnes */
+.bg-chaux{background-color:var(--chaux);background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.52' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");background-size:210px;position:relative}
+
+.axes{padding:8rem 5rem}
+.axes-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:300;color:var(--brun);line-height:1.2;margin-bottom:5rem;letter-spacing:-.01em}
+.axes-title em{font-style:italic;color:var(--terra)}
+.axes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:4rem;max-width:1000px}
+
+.axe{border-top:1px solid rgba(156,110,74,.2);padding-top:2rem;opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease}
+.axe.in-view{opacity:1;transform:translateY(0)}
+.axe:nth-child(2){transition-delay:.15s}
+
+.axe-num{font-size:.6rem;letter-spacing:.4em;color:rgba(156,110,74,.4);margin-bottom:1.2rem;font-family:'Jost',sans-serif}
+.axe-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.3rem,2vw,1.8rem);font-weight:300;color:var(--brun);line-height:1.2;margin-bottom:1.2rem;letter-spacing:-.01em}
+.axe-title em{font-style:italic;color:var(--terra)}
+.axe-body{font-size:.85rem;line-height:1.9;color:rgba(42,31,20,.55);font-weight:300}
+
+/* PROCESS — citation centrale */
+.process{padding:6rem 5rem;background:var(--white);border-top:1px solid rgba(156,110,74,.1)}
+.process-inner{max-width:700px;margin:0 auto;text-align:center}
+.process-quote{font-family:'Cormorant Garamond',serif;font-size:clamp(1.4rem,2.8vw,2.2rem);font-weight:300;font-style:italic;color:var(--brun);line-height:1.6;letter-spacing:.01em;opacity:0;transform:translateY(20px);transition:opacity .9s,transform .9s}
+.process-quote.in-view{opacity:1;transform:translateY(0)}
+.process-quote em{color:var(--terra);font-style:normal}
+.process-author{margin-top:2rem;font-size:.6rem;letter-spacing:.4em;text-transform:uppercase;color:rgba(156,110,74,.45);opacity:0;transition:opacity .9s .2s}
+.process-author.in-view{opacity:1}
+
+/* VIDEO SECTION */
+.video-section{padding:8rem 5rem;background:var(--brun);position:relative;overflow:hidden}
+.video-section::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");background-size:180px;mix-blend-mode:overlay;pointer-events:none}
+
+.video-header{margin-bottom:4rem;position:relative;z-index:1}
+.video-eyebrow{font-size:.62rem;letter-spacing:.5em;text-transform:uppercase;color:rgba(196,168,130,.4);margin-bottom:1rem}
+.video-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:300;color:var(--cream);line-height:1.2;letter-spacing:-.01em}
+.video-title em{font-style:italic;color:var(--stone)}
+
+/* Video player */
+.video-wrapper{position:relative;z-index:1;border-radius:16px;overflow:hidden;max-width:900px;margin:0 auto;box-shadow:0 30px 80px rgba(0,0,0,0.5);border:1px solid rgba(196,168,130,.1)}
+
+.video-wrapper video{width:100%;display:block;border-radius:16px}
+
+/* Placeholder si pas de vidéo */
+.video-placeholder{
+  width:100%;aspect-ratio:16/9;
+  background:linear-gradient(135deg,rgba(42,31,20,.8),rgba(61,107,114,.4),rgba(156,110,74,.3));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border-radius:16px;gap:1.5rem;
+}
+.video-placeholder::before{
+  content:'▶';font-size:3rem;color:rgba(196,168,130,.3);
+}
+.video-placeholder-text{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:1.1rem;color:rgba(196,168,130,.4);letter-spacing:.05em;
+}
+
+.video-caption{margin-top:2rem;text-align:center;position:relative;z-index:1}
+.video-caption p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;color:rgba(196,168,130,.45);letter-spacing:.05em}
+
+/* CTA */
+.video-cta{display:flex;justify-content:center;margin-top:5rem;position:relative;z-index:1}
+.cta-btn{display:inline-block;padding:.8rem 3rem;border:1px solid rgba(196,168,130,.35);color:var(--stone);font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;text-decoration:none;cursor:none;transition:background .4s,border-color .4s,color .4s;font-family:'Jost',sans-serif;font-weight:300}
+.cta-btn:hover{background:rgba(196,168,130,.1);border-color:rgba(196,168,130,.65);color:var(--cream)}
+
+/* FOOTER */
+footer{background:var(--brun);padding:3rem 5rem;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(196,168,130,.1)}
+.footer-logo{font-family:'Cormorant Garamond',serif;font-size:.9rem;letter-spacing:.42em;color:rgba(196,168,130,.42);text-transform:uppercase;font-weight:300}
+.footer-copy{font-size:.6rem;letter-spacing:.18em;color:rgba(196,168,130,.2);text-transform:uppercase}
+.footer-contact{font-size:.65rem;color:rgba(196,168,130,.38);letter-spacing:.1em;text-decoration:none;transition:color .3s}
+.footer-contact:hover{color:var(--stone)}
+
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease}
+.reveal.in-view{opacity:1;transform:translateY(0)}
+
+@media(max-width:768px){
+  nav{padding:1.2rem 1.5rem}
+  .nav-links{display:none}
+  .hero{padding:0 1.5rem 5rem}
+  .axes{padding:5rem 1.5rem}
+  .axes-grid{grid-template-columns:1fr;gap:2rem}
+  .process{padding:4rem 1.5rem}
+  .video-section{padding:5rem 1.5rem}
+  footer{flex-direction:column;gap:1.5rem;text-align:center;padding:2rem 1.5rem}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav id="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-mark">H</div>
+    Henriette.AI
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html#services">Prestations</a></li>
+    <li><a href="visual-ai-branding.html">Visual AI Branding</a></li>
+    <li><a href="creative-automation.html" class="active">Creative Automation</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-video">
+    <video autoplay muted loop playsinline preload="auto">
+      <source src="sea.mp4.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="grain"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Henriette.AI · Prestation</p>
+    <h1 class="hero-title">Creative<br><em>Automation</em></h1>
+    <p class="hero-desc">Vous avez un univers visuel — maintenant il faut l'alimenter. Des pipelines de création automatisés, calibrés sur votre identité, pour produire en continu sans jamais sacrifier la qualité.</p>
+  </div>
+</section>
+
+<!-- AXES -->
+<section class="axes bg-chaux">
+  <h2 class="axes-title">Les prestations<br>de <em>l'agence</em></h2>
+  <div class="axes-grid">
+
+    <div class="axe">
+      <p class="axe-num">01</p>
+      <h3 class="axe-title">Automatisation de vos<br><em>réseaux sociaux</em></h3>
+      <p class="axe-body">Visuels cohérents, planifiés et calibrés sur votre identité — produits automatiquement pour alimenter vos réseaux sans effort. Instagram, LinkedIn, Facebook : le bon format, le bon ton, au bon moment. Vous définissez la direction créative une fois. L'automatisation fait le reste.</p>
+    </div>
+
+    <div class="axe">
+      <p class="axe-num">02</p>
+      <h3 class="axe-title">Applications créatives<br><em>sur-mesure</em></h3>
+      <p class="axe-body">Des outils pensés pour votre workflow : générateur d'idées quotidien, moodboard auto-alimenté, veille visuelle personnalisée. L'IA intégrée directement dans vos habitudes créatives — pour que l'inspiration ne soit plus une question de temps disponible.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- CITATION CENTRALE -->
+<section class="process">
+  <div class="process-inner">
+    <p class="process-quote reveal">Tu pourrais m'aider à produire ce type de contenu <em>régulièrement</em> ? Oui — et sans que tu aies à y penser.</p>
+    <p class="process-author reveal">La promesse Henriette.AI</p>
+  </div>
+</section>
+
+<!-- VIDEO -->
+<section class="video-section">
+  <div class="video-header reveal">
+    <p class="video-eyebrow">En pratique</p>
+    <h2 class="video-title">L'automation,<br><em>au quotidien</em></h2>
+  </div>
+
+  <div class="video-wrapper reveal">
+    <video autoplay muted loop playsinline preload="auto" id="autoVideo">
+      <source src="automation.mp4" type="video/mp4">
+    </video>
+    <!-- Placeholder affiché si la vidéo ne charge pas -->
+    <div class="video-placeholder" id="videoPlaceholder" style="display:none">
+      <p class="video-placeholder-text">La vidéo arrive bientôt</p>
+    </div>
+  </div>
+
+  <div class="video-caption reveal">
+    <p>Une styliste consulte son moodboard auto-alimenté, puis vérifie son Instagram — généré, planifié, publié.</p>
+  </div>
+
+  <div class="video-cta">
+    <a href="index.html#contact" class="cta-btn">Automatiser ma création</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Henriette.AI</div>
+  <p class="footer-copy">© 2025 · Costa Brava · Sud de France</p>
+  <a href="mailto:contact@henrietteai.fr" class="footer-contact">contact@henrietteai.fr</a>
+</footer>
+
+<script>
+// CURSOR
+const cursor=document.getElementById('cursor');
+const ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;});
+(function anim(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;requestAnimationFrame(anim)})();
+document.querySelectorAll('a,button,.cta-btn').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ring.style.width='50px';ring.style.height='50px';ring.style.opacity='.45';});
+  el.addEventListener('mouseleave',()=>{ring.style.width='30px';ring.style.height='30px';ring.style.opacity='1';});
+});
+
+// NAV
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>60));
+
+// VIDEO PLACEHOLDER — si la vidéo ne charge pas
+const vid=document.getElementById('autoVideo');
+const placeholder=document.getElementById('videoPlaceholder');
+vid.addEventListener('error',()=>{vid.style.display='none';placeholder.style.display='flex';});
+
+// SCROLL REVEAL
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{
+  if(e.isIntersecting){e.target.classList.add('in-view');}
+}),{threshold:.1});
+document.querySelectorAll('.axe,.reveal,.process-quote,.process-author').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
