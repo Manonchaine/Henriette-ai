@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Driven Optimization — Henriette.AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--brun:#2a1f14;--terra:#9c6e4a;--stone:#c4a882;--cream:#f5efe4;--chaux:#efe9dd;--white:#faf8f4;--sea:#3d6b72}
+html{scroll-behavior:smooth}
+body{background:var(--white);color:var(--brun);font-family:'Jost',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
+
+.cursor{width:7px;height:7px;background:var(--terra);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+.cursor-ring{width:30px;height:30px;border:1px solid rgba(156,110,74,0.4);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s,height .3s}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.6rem 3rem;display:flex;justify-content:space-between;align-items:center;transition:background .5s}
+nav.scrolled{background:rgba(239,233,221,0.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(196,168,130,0.18)}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1rem;letter-spacing:.42em;color:var(--white);text-transform:uppercase;font-weight:300;transition:color .5s;text-decoration:none;display:flex;align-items:center;gap:.7rem}
+nav.scrolled .nav-logo{color:var(--brun)}
+.logo-mark{width:26px;height:26px;border:1px solid currentColor;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;opacity:.75}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,239,228,.6);text-decoration:none;transition:color .3s}
+nav.scrolled .nav-links a{color:rgba(42,31,20,.45)}
+.nav-links a:hover,.nav-links a.active{color:var(--terra)!important}
+
+/* HERO */
+.hero{position:relative;width:100%;min-height:100vh;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;overflow:hidden;padding:0 0 6rem 5rem}
+.hero-video{position:absolute;inset:0;z-index:0}
+.hero-video video{width:100%;height:100%;object-fit:cover}
+.hero-video::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(42,31,20,.3) 0%,rgba(42,31,20,.05) 40%,rgba(42,31,20,.78) 100%)}
+.grain{position:absolute;inset:0;pointer-events:none;z-index:2;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");background-size:180px;mix-blend-mode:overlay}
+.hero-content{position:relative;z-index:3;max-width:800px}
+.hero-eyebrow{font-size:.62rem;letter-spacing:.5em;text-transform:uppercase;color:rgba(196,168,130,.6);margin-bottom:1.5rem;font-family:'Jost',sans-serif;font-weight:200;animation:fadeUp .8s ease .2s both}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3.5rem,8vw,7rem);line-height:.95;letter-spacing:-.02em;color:var(--white);margin-bottom:2rem;animation:fadeUp .9s ease .4s both}
+.hero-title em{font-style:italic;background:linear-gradient(135deg,#e8d5b0 0%,#c4a882 20%,#d4956a 40%,#9fc4c8 65%,#6ba8b0 85%,#e8d0a0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-desc{font-family:'Cormorant Garamond',serif;font-size:clamp(1rem,1.8vw,1.3rem);color:rgba(245,239,228,.82);line-height:1.75;max-width:580px;animation:fadeUp .9s ease .6s both}
+.hero-desc em{font-style:italic;color:rgba(196,168,130,.9)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* AXES */
+.bg-chaux{background-color:var(--chaux);background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.52' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");background-size:210px}
+.axes{padding:8rem 5rem}
+.axes-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:300;color:var(--brun);line-height:1.2;margin-bottom:5rem;letter-spacing:-.01em}
+.axes-title em{font-style:italic;color:var(--terra)}
+.axes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:4rem;max-width:1000px}
+.axe{border-top:1px solid rgba(156,110,74,.2);padding-top:2rem}
+.axe-num{font-size:.6rem;letter-spacing:.4em;color:rgba(156,110,74,.4);margin-bottom:1.2rem;font-family:'Jost',sans-serif}
+.axe-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.3rem,2vw,1.8rem);font-weight:300;color:var(--brun);line-height:1.2;margin-bottom:1.2rem}
+.axe-title em{font-style:italic;color:var(--terra)}
+.axe-body{font-size:.85rem;line-height:1.9;color:rgba(42,31,20,.55);font-weight:300}
+
+/* WORKFLOW */
+.workflow{padding:8rem 5rem;background:var(--brun);position:relative;overflow:hidden}
+.workflow::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");background-size:180px;mix-blend-mode:overlay;pointer-events:none}
+.workflow-eyebrow{font-size:.62rem;letter-spacing:.5em;text-transform:uppercase;color:rgba(196,168,130,.4);margin-bottom:1rem;position:relative;z-index:1}
+.workflow-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:300;color:var(--cream);line-height:1.2;margin-bottom:4rem;position:relative;z-index:1}
+.workflow-title em{font-style:italic;color:var(--stone)}
+
+/* SVG diagram wrapper */
+.diagram-wrap{position:relative;z-index:1;width:100%;overflow-x:auto;padding:1rem 0 2rem}
+
+/* Result box */
+.result-box{position:relative;z-index:1;margin-top:3rem;padding:2rem 2.5rem;border:1px solid rgba(196,168,130,.15);border-radius:8px;max-width:580px}
+.result-label{font-size:.58rem;letter-spacing:.38em;text-transform:uppercase;font-family:'Jost',sans-serif;color:rgba(196,168,130,.35);margin-bottom:.8rem}
+.result-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:rgba(196,168,130,.65);line-height:1.65}
+
+.workflow-cta{display:flex;justify-content:center;margin-top:5rem;position:relative;z-index:1}
+.cta-btn{display:inline-block;padding:.8rem 3rem;border:1px solid rgba(196,168,130,.35);color:var(--stone);font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;text-decoration:none;cursor:none;transition:background .4s,border-color .4s,color .4s;font-family:'Jost',sans-serif;font-weight:300}
+.cta-btn:hover{background:rgba(196,168,130,.1);border-color:rgba(196,168,130,.65);color:var(--cream)}
+
+footer{background:var(--brun);padding:3rem 5rem;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(196,168,130,.1)}
+.footer-logo{font-family:'Cormorant Garamond',serif;font-size:.9rem;letter-spacing:.42em;color:rgba(196,168,130,.42);text-transform:uppercase;font-weight:300}
+.footer-copy{font-size:.6rem;letter-spacing:.18em;color:rgba(196,168,130,.2);text-transform:uppercase}
+.footer-contact{font-size:.65rem;color:rgba(196,168,130,.38);letter-spacing:.1em;text-decoration:none;transition:color .3s}
+.footer-contact:hover{color:var(--stone)}
+
+@media(max-width:768px){
+  nav{padding:1.2rem 1.5rem}
+  .nav-links{display:none}
+  .hero{padding:0 1.5rem 5rem}
+  .axes{padding:5rem 1.5rem}
+  .axes-grid{grid-template-columns:1fr;gap:2rem}
+  .workflow{padding:5rem 1.5rem}
+  footer{flex-direction:column;gap:1.5rem;text-align:center;padding:2rem 1.5rem}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav id="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-mark">H</div>
+    Henriette.AI
+  </a>
+  <ul class="nav-links">
+    <li><a href="visual-ai-branding.html">Visual AI Branding</a></li>
+    <li><a href="creative-automation.html">Creative Automation</a></li>
+    <li><a href="ai-driven-optimization.html" class="active">AI-Driven Optimization</a></li>
+    <li><a href="index.html#manifesto">Manifeste</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-video">
+    <video autoplay muted loop playsinline preload="auto">
+      <source src="sea.mp4.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="grain"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Henriette.AI · Prestation</p>
+    <h1 class="hero-title">AI-Driven<br><em>Optimization</em></h1>
+    <p class="hero-desc"><em>"On utilise déjà des outils IA en interne mais c'est le bazar."</em><br><br>Un diagnostic précis, des recommandations actionnables — les bons outils, les bons process, au bon endroit.</p>
+  </div>
+</section>
+
+<section class="axes bg-chaux">
+  <h2 class="axes-title">Les prestations<br>de <em>l'agence</em></h2>
+  <div class="axes-grid">
+    <div class="axe">
+      <p class="axe-num">01</p>
+      <h3 class="axe-title">Audit &amp; conseil<br><em>sur les outils IA</em></h3>
+      <p class="axe-body">Un regard extérieur sur vos process existants — pour identifier où l'IA crée de la valeur et où elle crée du bruit. Recommandations personnalisées sur les outils adaptés à votre activité, accompagnement à la prise en main et formation de vos équipes.</p>
+    </div>
+    <div class="axe">
+      <p class="axe-num">02</p>
+      <h3 class="axe-title">Workflows<br><em>automation</em></h3>
+      <p class="axe-body">Au-delà du créatif — une construction d'automatisations concrètes pour vos process métier. Gestion de contenu, reporting, CRM, facturation, veille : des workflows sur-mesure qui font gagner du temps à toute l'organisation, pas seulement à l'équipe créative.</p>
+    </div>
+  </div>
+</section>
+
+<section class="workflow">
+  <p class="workflow-eyebrow">Visualiser le process</p>
+  <h2 class="workflow-title">De l'audit au<br><em>workflow optimisé</em></h2>
+
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 860 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:580px;max-width:860px;display:block;margin:0 auto">
+      <defs>
+        <style>
+          .node-circle{animation:popIn .5s ease both}
+          .node-icon{animation:fadeIn .4s ease both}
+          .node-text{animation:fadeIn .4s ease both}
+          .connector{animation:drawLine .4s ease both;stroke-dasharray:5,4}
+          .arrow{animation:fadeIn .3s ease both}
+
+          .n1{animation-delay:0s}
+          .n2{animation-delay:.3s}
+          .n3{animation-delay:.6s}
+          .n4{animation-delay:.9s}
+          .n5{animation-delay:1.2s}
+          .c1{animation-delay:.15s}
+          .c2{animation-delay:.45s}
+          .c3{animation-delay:.75s}
+          .c4{animation-delay:1.05s}
+
+          @keyframes popIn{from{opacity:0;transform-origin:center;transform:scale(0.5)}to{opacity:1;transform:scale(1)}}
+          @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+          @keyframes drawLine{from{opacity:0;stroke-dashoffset:30}to{opacity:1;stroke-dashoffset:0}}
+        </style>
+      </defs>
+
+      <!-- Lignes connecteurs -->
+      <line class="connector c1" x1="86" y1="65" x2="154" y2="65" stroke="rgba(196,168,130,0.35)" stroke-width="1"/>
+      <line class="connector c2" x1="246" y1="65" x2="314" y2="65" stroke="rgba(196,168,130,0.35)" stroke-width="1"/>
+      <line class="connector c3" x1="406" y1="65" x2="474" y2="65" stroke="rgba(196,168,130,0.35)" stroke-width="1"/>
+      <line class="connector c4" x1="566" y1="65" x2="634" y2="65" stroke="rgba(196,168,130,0.35)" stroke-width="1"/>
+
+      <!-- Flèches -->
+      <polygon class="arrow c1" points="154,61 162,65 154,69" fill="rgba(196,168,130,0.45)"/>
+      <polygon class="arrow c2" points="314,61 322,65 314,69" fill="rgba(196,168,130,0.45)"/>
+      <polygon class="arrow c3" points="474,61 482,65 474,69" fill="rgba(196,168,130,0.45)"/>
+      <polygon class="arrow c4" points="634,61 642,65 634,69" fill="rgba(196,168,130,0.45)"/>
+
+      <!-- NODE 1 — Audit -->
+      <g class="n1">
+        <circle class="node-circle" cx="46" cy="65" r="38" fill="rgba(156,110,74,0.13)" stroke="rgba(156,110,74,0.4)" stroke-width="1"/>
+        <circle class="node-icon" cx="42" cy="60" r="12" fill="none" stroke="rgba(196,168,130,0.65)" stroke-width="1.2"/>
+        <line class="node-icon" x1="50.5" y1="68.5" x2="56" y2="74" stroke="rgba(196,168,130,0.65)" stroke-width="1.5" stroke-linecap="round"/>
+        <text class="node-text" x="46" y="116" text-anchor="middle" font-family="Jost,sans-serif" font-size="7.5" letter-spacing="1.5" fill="rgba(196,168,130,0.55)">AUDIT</text>
+        <text class="node-text" x="46" y="130" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="9.5" font-style="italic" fill="rgba(196,168,130,0.38)">Diagnostic</text>
+      </g>
+
+      <!-- NODE 2 — Analyse -->
+      <g class="n2">
+        <circle class="node-circle" cx="206" cy="65" r="38" fill="rgba(61,107,114,0.13)" stroke="rgba(61,107,114,0.42)" stroke-width="1"/>
+        <path class="node-icon" d="M188 76 Q196 52 206 60 Q216 68 224 46" fill="none" stroke="rgba(61,107,114,0.72)" stroke-width="1.5" stroke-linecap="round"/>
+        <circle class="node-icon" cx="206" cy="60" r="3" fill="rgba(61,107,114,0.55)"/>
+        <text class="node-text" x="206" y="116" text-anchor="middle" font-family="Jost,sans-serif" font-size="7.5" letter-spacing="1.5" fill="rgba(196,168,130,0.55)">ANALYSE</text>
+        <text class="node-text" x="206" y="130" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="9.5" font-style="italic" fill="rgba(196,168,130,0.38)">Recommandations</text>
+      </g>
+
+      <!-- NODE 3 — Construction -->
+      <g class="n3">
+        <circle class="node-circle" cx="366" cy="65" r="38" fill="rgba(196,168,130,0.1)" stroke="rgba(196,168,130,0.38)" stroke-width="1"/>
+        <circle class="node-icon" cx="366" cy="65" r="13" fill="none" stroke="rgba(196,168,130,0.55)" stroke-width="1.2"/>
+        <circle class="node-icon" cx="366" cy="65" r="4" fill="rgba(196,168,130,0.4)"/>
+        <line class="node-icon" x1="366" y1="47" x2="366" y2="44" stroke="rgba(196,168,130,0.45)" stroke-width="1.5" stroke-linecap="round"/>
+        <line class="node-icon" x1="366" y1="86" x2="366" y2="83" stroke="rgba(196,168,130,0.45)" stroke-width="1.5" stroke-linecap="round"/>
+        <line class="node-icon" x1="348" y1="65" x2="345" y2="65" stroke="rgba(196,168,130,0.45)" stroke-width="1.5" stroke-linecap="round"/>
+        <line class="node-icon" x1="387" y1="65" x2="384" y2="65" stroke="rgba(196,168,130,0.45)" stroke-width="1.5" stroke-linecap="round"/>
+        <text class="node-text" x="366" y="116" text-anchor="middle" font-family="Jost,sans-serif" font-size="7.5" letter-spacing="1.5" fill="rgba(196,168,130,0.55)">CONSTRUCTION</text>
+        <text class="node-text" x="366" y="130" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="9.5" font-style="italic" fill="rgba(196,168,130,0.38)">Workflows</text>
+      </g>
+
+      <!-- NODE 4 — Validation -->
+      <g class="n4">
+        <circle class="node-circle" cx="526" cy="65" r="38" fill="rgba(156,110,74,0.1)" stroke="rgba(156,110,74,0.38)" stroke-width="1"/>
+        <polyline class="node-icon" points="510,65 522,77 544,51" fill="none" stroke="rgba(156,110,74,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <text class="node-text" x="526" y="116" text-anchor="middle" font-family="Jost,sans-serif" font-size="7.5" letter-spacing="1.5" fill="rgba(196,168,130,0.55)">VALIDATION</text>
+        <text class="node-text" x="526" y="130" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="9.5" font-style="italic" fill="rgba(196,168,130,0.38)">Tests &amp; ajustements</text>
+      </g>
+
+      <!-- NODE 5 — Déploiement -->
+      <g class="n5">
+        <circle class="node-circle" cx="686" cy="65" r="38" fill="rgba(61,107,114,0.15)" stroke="rgba(61,107,114,0.48)" stroke-width="1"/>
+        <line class="node-icon" x1="686" y1="82" x2="686" y2="50" stroke="rgba(61,107,114,0.72)" stroke-width="1.5" stroke-linecap="round"/>
+        <polyline class="node-icon" points="675,62 686,50 697,62" fill="none" stroke="rgba(61,107,114,0.72)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <line class="node-icon" x1="675" y1="82" x2="697" y2="82" stroke="rgba(61,107,114,0.45)" stroke-width="1.5" stroke-linecap="round"/>
+        <text class="node-text" x="686" y="116" text-anchor="middle" font-family="Jost,sans-serif" font-size="7.5" letter-spacing="1.5" fill="rgba(196,168,130,0.55)">DÉPLOIEMENT</text>
+        <text class="node-text" x="686" y="130" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="9.5" font-style="italic" fill="rgba(196,168,130,0.38)">Autonomie client</text>
+      </g>
+
+    </svg>
+  </div>
+
+  <div class="result-box">
+    <div class="result-label">Résultat</div>
+    <div class="result-text">Un process fluide, automatisé, qui tourne sans vous — et qui s'adapte à mesure que votre activité évolue.</div>
+  </div>
+
+  <div class="workflow-cta">
+    <a href="index.html#contact" class="cta-btn">Auditer mon organisation</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Henriette.AI</div>
+  <p class="footer-copy">© 2025 · Costa Brava · Sud de France</p>
+  <a href="/cdn-cgi/l/email-protection#e3808c8d97828097a38b868d918a86979786828acd8591" class="footer-contact"><span class="__cf_email__" data-cfemail="41222e2f352022350129242f33282435352420286f2733">[email&#160;protected]</span></a>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+const cursor=document.getElementById('cursor');
+const ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;});
+(function anim(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;requestAnimationFrame(anim)})();
+document.querySelectorAll('a,.cta-btn').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ring.style.width='50px';ring.style.height='50px';});
+  el.a
