@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Henriette.AI — Créations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--brun:#2a1f14;--terra:#9c6e4a;--stone:#c4a882;--cream:#f5efe4;--chaux:#efe9dd;--white:#faf8f4}
+html{scroll-behavior:smooth}
+body{background:var(--white);color:var(--brun);font-family:'Jost',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
+
+.cursor{width:7px;height:7px;background:var(--terra);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+.cursor-ring{width:30px;height:30px;border:1px solid rgba(156,110,74,0.4);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s,height .3s,opacity .3s}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.6rem 3rem;display:flex;justify-content:space-between;align-items:center;background:rgba(250,248,244,0.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(196,168,130,.18)}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1rem;letter-spacing:.42em;color:var(--brun);text-transform:uppercase;font-weight:300;transition:color .5s;text-decoration:none;display:flex;align-items:center;gap:.7rem}
+.logo-mark{width:26px;height:26px;border:1px solid currentColor;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;opacity:.75}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,31,20,.45);text-decoration:none;transition:color .3s}
+.nav-links a:hover{color:var(--terra)!important}
+
+/* HERO */
+.page-hero{padding:10rem 5rem 4rem;position:relative}
+.page-eyebrow{font-size:.6rem;letter-spacing:.48em;text-transform:uppercase;color:rgba(156,110,74,.5);margin-bottom:1rem;font-family:'Jost',sans-serif}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,6vw,5.5rem);font-weight:300;color:var(--brun);line-height:1.05;letter-spacing:-.02em}
+.page-title em{font-style:italic;color:var(--terra)}
+
+/* FILTERS */
+.filters{padding:0 5rem 3rem;display:flex;align-items:center;gap:2rem;border-bottom:1px solid rgba(156,110,74,.12)}
+.filter-btn{font-family:'Jost',sans-serif;font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(42,31,20,.35);background:none;border:none;cursor:none;padding:.5rem 0;position:relative;transition:color .3s}
+.filter-btn::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--terra);transition:width .4s}
+.filter-btn.active{color:var(--brun)}
+.filter-btn.active::after{width:100%}
+.filter-count{font-size:.5rem;opacity:.4;margin-left:.4rem;letter-spacing:.1em}
+
+/* LAYOUT SWITCHER */
+.layout-switcher{margin-left:auto;display:flex;gap:.8rem;align-items:center}
+.layout-btn{width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:none;border:1px solid rgba(156,110,74,.2);border-radius:4px;cursor:none;transition:border-color .3s;padding:5px}
+.layout-btn.active{border-color:var(--terra)}
+.layout-btn svg{width:100%;height:100%;opacity:.4;transition:opacity .3s}
+.layout-btn.active svg{opacity:1}
+.layout-btn:hover svg{opacity:.7}
+
+/* GALLERY CONTAINER */
+.gallery{padding:4rem 5rem 8rem;min-height:60vh}
+
+/* LAYOUT 1 — Grille régulière */
+.grid-regular{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+/* LAYOUT 2 — Masonry organique */
+.grid-masonry{columns:3;column-gap:1.5rem}
+.grid-masonry .item{break-inside:avoid;margin-bottom:1.5rem}
+/* LAYOUT 3 — Duos larges */
+.grid-duo{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.grid-duo .item:nth-child(5n+1){grid-column:1/-1}
+.grid-duo .item:nth-child(5n+1) .item-img{height:540px}
+
+.item{position:relative;overflow:hidden;border-radius:8px;cursor:none}
+.item-img{width:100%;height:320px;object-fit:cover;display:block;transition:transform .7s cubic-bezier(.16,1,.3,1);filter:saturate(.9)}
+.item:hover .item-img{transform:scale(1.04);filter:saturate(1.05)}
+.item-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(42,31,20,.5) 0%,transparent 50%);opacity:0;transition:opacity .5s}
+.item:hover .item-overlay{opacity:1}
+
+/* Placeholder image */
+.item-placeholder{width:100%;height:320px;display:flex;align-items:center;justify-content:center;background:var(--chaux);color:rgba(156,110,74,.3);font-family:'Cormorant Garamond',serif;font-size:.85rem;letter-spacing:.2em;text-transform:uppercase;font-style:italic;transition:background .4s}
+.item:hover .item-placeholder{background:color-mix(in oklch,var(--chaux),var(--stone) 8%)}
+
+/* Lightbox */
+.lightbox{position:fixed;inset:0;background:rgba(42,31,20,.96);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s;backdrop-filter:blur(8px)}
+.lightbox.open{opacity:1;pointer-events:auto}
+.lightbox img{max-width:88vw;max-height:88vh;object-fit:contain;border-radius:4px}
+.lightbox-close{position:absolute;top:2rem;right:2.5rem;font-family:'Jost',sans-serif;font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(196,168,130,.5);cursor:none;transition:color .3s}
+.lightbox-close:hover{color:var(--stone)}
+
+/* ROW LABELS */
+.row-label{display:flex;align-items:center;gap:1.5rem;margin-bottom:2rem}
+.row-label-text{font-family:'Jost',sans-serif;font-size:.6rem;letter-spacing:.38em;text-transform:uppercase;color:rgba(156,110,74,.5);white-space:nowrap}
+.row-label-line{flex:1;height:1px;background:rgba(156,110,74,.12)}
+
+/* GRID ROW — défilement horizontal */
+.grid-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.2rem}
+/* GRID 3 colonnes fixes */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+
+/* WATERMARK — lightbox only */
+.lightbox .watermark{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(1.5rem,4vw,3rem);
+  letter-spacing:.5em;
+  text-transform:uppercase;
+  color:rgba(245,239,228,.55);
+  pointer-events:none;
+  user-select:none;
+  white-space:nowrap;
+}
+
+/* HIDDEN */
+.item[data-cat].hidden{display:none}
+
+@media(max-width:768px){
+  nav{padding:1.2rem 1.5rem}
+  .nav-links{display:none}
+  .page-hero{padding:7rem 1.5rem 3rem}
+  .filters{padding:0 1.5rem 2rem;flex-wrap:wrap;gap:1rem}
+  .gallery{padding:2rem 1.5rem 5rem}
+  .grid-regular,.grid-duo{grid-template-columns:1fr 1fr}
+  .grid-masonry{columns:2}
+}
+@media(max-width:480px){
+  .grid-regular,.grid-duo{grid-template-columns:1fr}
+  .grid-masonry{columns:1}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="logo-mark">H</div>
+    Henriette.AI
+  </a>
+  <ul class="nav-links">
+    <li><a href="visual-ai-branding.html">Visual AI Branding</a></li>
+    <li><a href="creative-automation.html">Creative Automation</a></li>
+    <li><a href="ai-driven-optimization.html">AI-Driven Optimization</a></li>
+    <li><a href="index.html#manifesto">Manifeste</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <p class="page-eyebrow">Portfolio</p>
+  <h1 class="page-title">Mes <em>créations</em></h1>
+</div>
+
+<div class="filters" id="filters">
+  <button class="filter-btn active" data-filter="all">Tout voir <span class="filter-count" id="countAll"></span></button>
+  <button class="filter-btn" data-filter="photo">Photos réelles <span class="filter-count" id="countPhoto"></span></button>
+  <button class="filter-btn" data-filter="ai">Images générées <span class="filter-count" id="countAi"></span></button>
+
+  <div class="layout-switcher">
+    <button class="layout-btn active" data-layout="regular" title="Grille régulière">
+      <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="1" y="1" width="7" height="7" rx="1"/><rect x="10" y="1" width="7" height="7" rx="1"/>
+        <rect x="1" y="10" width="7" height="7" rx="1"/><rect x="10" y="10" width="7" height="7" rx="1"/>
+      </svg>
+    </button>
+    <button class="layout-btn" data-layout="masonry" title="Masonry">
+      <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="1" y="1" width="7" height="10" rx="1"/><rect x="10" y="1" width="7" height="6" rx="1"/>
+        <rect x="1" y="13" width="7" height="4" rx="1"/><rect x="10" y="9" width="7" height="8" rx="1"/>
+      </svg>
+    </button>
+    <button class="layout-btn" data-layout="duo" title="Grands formats">
+      <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="1" y="1" width="16" height="7" rx="1"/>
+        <rect x="1" y="10" width="7" height="7" rx="1"/><rect x="10" y="10" width="7" height="7" rx="1"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<div class="gallery" id="gallery">
+
+  <!-- VUE "TOUT VOIR" : rangées alternées 3+3 -->
+  <div id="viewAll">
+
+    <div class="row-label"><span class="row-label-text">Photos réelles</span><span class="row-label-line"></span></div>
+    <div class="grid-3"><div class="item" data-cat="photo"><img class="item-img" src="Begur.jpg" alt="Begur · Costa Brava" draggable="false"><div class="item-overlay"></div></div><div class="item" data-cat="photo"><img class="item-img" src="Cap sa sal.jpg" alt="Cap sa Sal · Costa Brava" draggable="false"><div class="item-overlay"></div></div><div class="item" data-cat="photo"><img class="item-img" src="cup cap sa sal.jpg" alt="Cap sa Sal · Costa Brava" draggable="false"><div class="item-overlay"></div></div></div>
+
+    <div class="row-label" style="margin-top:2.5rem;"><span class="row-label-text">Images générées</span><span class="row-label-line"></span></div>
+    <div class="grid-3"><div class="item" data-cat="ai"><div class="item-placeholder">image générée · 01</div></div><div class="item" data-cat="ai"><div class="item-placeholder">image générée · 02</div></div><div class="item" data-cat="ai"><div class="item-placeholder">image générée · 03</div></div></div>
+
+    <div class="row-label" style="margin-top:2.5rem;"><span class="row-label-text">Photos réelles</span><span class="row-label-line"></span></div>
+    <div class="grid-3"><div class="item" data-cat="photo"><div class="item-placeholder">photo réelle · 04</div></div><div class="item" data-cat="photo"><div class="item-placeholder">photo réelle · 05</div></div><div class="item" data-cat="photo"><div class="item-placeholder">photo réelle · 06</div></div></div>
+
+    <div class="row-label" style="margin-top:2.5rem;"><span class="row-label-text">Images générées</span><span class="row-label-line"></span></div>
+    <div class="grid-3"><div class="item" data-cat="ai"><div class="item-placeholder">image générée · 04</div></div><div class="item" data-cat="ai"><div class="item-placeholder">image générée · 05</div></div><div class="item" data-cat="ai"><div class="item-placeholder">image générée · 06</div></div></div>
+
+  </div>
+
+  <!-- VUE FILTRÉE : grille simple -->
+  <div id="viewFiltered" style="display:none;">
+    <div class="grid-regular" id="grid"></div>
+  </div>
+
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <span class="lightbox-close" id="lightboxClose">Fermer</span>
+  <div style="position:relative;">
+    <img src="" id="lightboxImg" alt="">
+    <div class="watermark">© Henriette.AI crédit</div>
+  </div>
+</div>
+
+<script>
+// Protection images
+document.addEventListener('contextmenu',e=>{if(e.target.tagName==='IMG')e.preventDefault();});
+document.querySelectorAll('img').forEach(img=>{img.addEventListener('dragstart',e=>e.preventDefault());});
+
+// Cursor
+const cursor=document.getElementById('cursor');
+const ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;});
+(function anim(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;requestAnimationFrame(anim)})();
+
+// Counts
+const allItems=[...document.querySelectorAll('.item[data-cat]')];
+document.getElementById('countAll').textContent=allItems.length;
+document.getElementById('countPhoto').textContent=allItems.filter(i=>i.dataset.cat==='photo').length;
+document.getElementById('countAi').textContent=allItems.filter(i=>i.dataset.cat==='ai').length;
+
+// Filter
+const viewAll=document.getElementById('viewAll');
+const viewFiltered=document.getElementById('viewFiltered');
+const grid=document.getElementById('grid');
+
+function populateGrid(cat){
+  grid.innerHTML='';
+  allItems.filter(i=>i.dataset.cat===cat).forEach(i=>grid.appendChild(i.cloneNode(true)));
+}
+
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f=btn.dataset.filter;
+    if(f==='all'){
+      viewAll.style.display='';
+      viewFiltered.style.display='none';
+    } else {
+      viewAll.style.display='none';
+      viewFiltered.style.display='';
+      populateGrid(f);
+    }
+  });
+});
+
+// Layout switcher (pour la vue filtrée)
+document.querySelectorAll('.layout-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.layout-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    grid.className='';
+    const map={regular:'grid-regular',masonry:'grid-masonry',duo:'grid-duo'};
+    grid.classList.add(map[btn.dataset.layout]);
+  });
+});
+
+// Lightbox
+function bindLightbox(container){
+  container.querySelectorAll('.item').forEach(item=>{
+    const img=item.querySelector('img');
+    if(img){
+      item.addEventListener('click',()=>{
+        document.getElementById('lightboxImg').src=img.src;
+        document.getElementById('lightbox').classList.add('open');
+      });
+    }
+  });
+}
+bindLightbox(document);
+document.getElementById('lightboxClose').addEventListener('click',()=>document.getElementById('lightbox').classList.remove('open'));
+document.getElementById('lightbox').addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.classList.remove('open');});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('lightbox').classList.remove('open');});
+</script>
+</body>
+</html>
