@@ -11,14 +11,21 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--brun:#2a1f14;--terra:#9c6e4a;--stone:#c4a882;--cream:#f5efe4;--chaux:#efe9dd;--white:#faf8f4}
 html{scroll-behavior:smooth}
-body{background:var(--white);color:var(--brun);font-family:'Jost',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
+body{background:var(--white);color:var(--brun);font-family:'Jost',sans-serif;font-weight:300;overflow-x:hidden}
+@media(hover:hover) and (pointer:fine){body{cursor:none}}
 
-.cursor{width:7px;height:7px;background:var(--terra);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
-.cursor-ring{width:30px;height:30px;border:1px solid rgba(156,110,74,0.4);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s,height .3s,opacity .3s}
+.cursor,.cursor-ring{display:none}
+@media(hover:hover) and (pointer:fine){
+  .cursor{display:block;width:7px;height:7px;background:var(--terra);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+  .cursor-ring{display:block;width:30px;height:30px;border:1px solid rgba(156,110,74,0.4);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s,height .3s,opacity .3s}
+}
 
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.6rem 3rem;display:flex;justify-content:space-between;align-items:center;background:rgba(250,248,244,0.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(196,168,130,.18)}
-.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1rem;letter-spacing:.42em;color:var(--brun);text-transform:uppercase;font-weight:300;transition:color .5s;text-decoration:none;display:flex;align-items:center;gap:.7rem}
+.nav-logo{display:flex;align-items:center;text-decoration:none;transition:opacity .3s}
+.nav-logo:hover{opacity:.75}
+.nav-logo-img{display:block;height:200px;width:auto;margin:-65px 2.5rem -65px -32px}
+.nav-logo-hidden{font-family:'Cormorant Garamond',serif;font-size:1rem;letter-spacing:.42em;color:var(--brun);text-transform:uppercase;font-weight:300;transition:color .5s;text-decoration:none;display:flex;align-items:center;gap:.7rem}
 .logo-mark{width:26px;height:26px;border:1px solid currentColor;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;opacity:.75}
 .nav-links{display:flex;gap:2rem;list-style:none}
 .nav-links a{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,31,20,.45);text-decoration:none;transition:color .3s}
@@ -124,9 +131,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.6rem 3rem;display:
 <div class="cursor-ring" id="cursorRing"></div>
 
 <nav>
-  <a href="index.html" class="nav-logo">
-    <div class="logo-mark">H</div>
-    Henriette.AI
+  <a href="index.html" class="nav-logo" aria-label="Henriette.ai — accueil">
+    <img src="henriette-logo-dark.svg" alt="Henriette.ai" class="nav-logo-img">
   </a>
   <ul class="nav-links">
     <li><a href="visual-ai-branding.html">Visual AI Branding</a></li>
@@ -213,8 +219,10 @@ document.querySelectorAll('img').forEach(img=>{img.addEventListener('dragstart',
 const cursor=document.getElementById('cursor');
 const ring=document.getElementById('cursorRing');
 let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;});
-(function anim(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;requestAnimationFrame(anim)})();
+if(window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;});
+  (function anim(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;requestAnimationFrame(anim)})();
+}
 
 // Counts
 const allItems=[...document.querySelectorAll('.item[data-cat]')];
